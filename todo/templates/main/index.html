@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="notification is-info">
+  {{ messages[0] }}
+</div>
+{% endif %}
+{% endwith %}
+
+<h1 class="title is-4">
+  Welcome, {{ current_user.username }}!
+</h1>
+<h1 class="subtitle is-4">
+  {% if existing_todo %}
+  Update Todo
+  {% else %}
+  Add Todo
+  {% endif %}
+</h1>
+
+<form action="" method="post">
+  {{ form.csrf_token }}
+
+  <input type="hidden" name="todo_id" value="{{existing_todo.id}}">
+
+  <div class="field">
+    <!-- {{ form.title.label(class="label") }} -->
+    <p class="control">
+      <input class="input is-medium" id="title" name="title" placeholder="e.g Buy Milk" required="" type="text"
+        value="{{existing_todo.title}}">
+    </p>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <p class="select is-fullwidth">
+          <select class="is-large" id="category" name="category" required="" value="{{existing_todo.category}}">
+            {% for choice in choices %}
+            <option value="{{ choice.id }}" class="has-background-{{ choice.color }}" style="color: white;">
+              {{choice.name }}
+            </option>
+            {% endfor %}
+          </select>
+        </p>
+        <span class="label">Category</span>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <p class="select is-fullwidth">
+          {{ form.priority(required="", class="is-large", value="{{existing_todo.priority}}") }}
+        </p>
+        {{ form.priority.label(class="label is-fullwidth") }}
+      </div>
+    </div>
+    <div class="column pt-6">
+      <div class="field">
+        <p class="control">
+          {% if existing_todo %}
+          <input class="button is-info is-fullwidth" type="submit" value="Update">
+          {% else %}
+          <input class="button is-primary is-fullwidth" type="submit" value="Add">
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</form>
+<br>
+<div class="title is-4">
+  Your Todos
+</div>
+
+<p>Sort By Title:
+  <a class="button is-small" href="{{ url_for('main.index', sort_by='title') }}">
+    Ascending
+  </a>
+  <a class="button is-small" href="{{ url_for('main.index', sort_by='title', descending='yes') }}">
+    Descending
+  </a>
+</p>
+<p>Sort By Priority:
+  <a class="button is-small" href="{{ url_for('main.index', sort_by='priority') }}">
+    Ascending
+  </a>
+  <a class="button is-small" href="{{ url_for('main.index', sort_by='priority', descending='yes') }}">
+    Descending
+  </a>
+</p>
+
+<p>
+  <strong>
+
+    Sorted by:
+    {% if sort_by == 'title' %}
+    Title -
+    {% else %}
+    Priority -
+    {% endif %}
+
+    {% if descending == 'yes' %}
+    Descending Order
+    {% else %}
+    Accending Order
+    {% endif %}
+  </strong>
+
+</p>
+<br>
+{% for todo in todos %}
+<div class="card mb-5">
+  <header class="card-header">
+    <p class="card-header-title">
+      <a class="tag is-{{ todo.category.color }}"
+        href="{{ url_for('main.category_todos', category_id=todo.category.id) }}">{{ todo.category.name }}</a>
+    </p>
+  </header>
+  <div class="card-content ">
+    <div class="content">
+      Todo:
+      {% if todo.completed %}
+      <strike>
+        {{ todo.title }}
+      </strike>
+      {% else %}
+      {{ todo.title }}
+      {% endif %}
+
+      <br>
+      <i>
+        Priority:
+        {% if todo.priority == 0 %}
+        None
+        {% endif %}
+        {% if todo.priority == 1 %}
+        Low
+        {% endif %}
+        {% if todo.priority == 2 %}
+        Medium
+        {% endif %}
+        {% if todo.priority == 3 %}
+        High
+        {% endif %}
+      </i>
+      <br>
+      <i>Status:
+        {% if todo.completed %}
+        Completed <a class="button is-danger is-small"
+          href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><strong>Mark Pending</strong></a>
+        {% else %}
+        Pending <a class="button is-success is-small"
+          href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><strong>Mark Compete</strong></a>
+        {% endif %}
+      </i>
+      <br>
+      <time><i>Created at: {{todo.created_at.date()}}</i></time>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <a href="{{ url_for('main.update_todo', todo_id=todo.id) }}" class="card-footer-item">Update</a>
+    <a href="{{ url_for('main.delete_todo', todo_id=todo.id) }}" class="card-footer-item">Delete</a>
+  </footer>
+</div>
+<br>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="notification is-info">
+  {{ messages[0] }}
+</div>
+{% endif %}
+{% endwith %}
+
+<h1 class="title is-3">
+  Categories
+</h1>
+<h1 class="subtitle is-5">
+  Add Category
+</h1>
+<form action="" method="post">
+  {{ form.csrf_token }}
+
+
+  <div class="columns">
+
+    <div class="column">
+      <div class="field is-fullwidth">
+        <p class="control ">
+          {{ form.name(required="", class="input", placeholder="e.g Important") }}
+        </p>
+        {{ form.name.label(class="label") }}
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="field">
+        <p class="select is-fullwidth">
+          <select id="color" name="color" required="">
+            <option class="has-background-black" style="color: white;" value="black">Black</option>
+            <option class="has-background-light" style="color: black;" value="light">Light</option>
+            <option class="has-background-dark" style="color: white;" value="dark">Dark</option>
+            <option class="has-background-primary" style="color: white;" value="primary">Primary</option>
+            <option class="has-background-info" style="color: white;" value="info">Info</option>
+            <option class="has-background-success" style="color: white;" value="success">Success</option>
+            <option class="has-background-warning" style="color: white;" value="warning">Warning</option>
+            <option class="has-background-danger" style="color: white;" value="danger">Danger</option>
+          </select>
+        </p>
+        {{ form.color.label(class="label") }}
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="field ">
+        <input class="button is-primary is-fullwidth" type="submit" value="Add">
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<hr>
+
+
+
+<div class="title is-4">
+  Available Categories
+</div>
+
+<div class="columns is-multiline">
+  {% for category in categories %}
+  <div class="column is-one-third has-addons">
+    <div class="notification box is-{{ category.color }} is-outlined" style="height: 130px;">
+      <a href="{{url_for('main.delete_category', category_id=category.id)}}" class="delete"></a>
+      {{ category.name }} <br>
+      <a class="button is-small" href="{{url_for('main.category_todos', category_id=category.id)}}">{{ category.todos | length }} todos</a> 
+      <br>
+      {% if category.todos | length != 0 %} 
+      <a class="button is-small is-primary" href="{{ url_for('main.category_todos', category_id=category.id)  }}" >View</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <hr>
+  {% endfor %}
+
+</div>
+
+
+
+
+
+
+
+{% endblock %}

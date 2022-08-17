@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="title is-4">
+  Todos for category "{{category.name}}"
+  
+</div>
+<br>
+  
+{% for todo in todos %}
+<div class="card mb-5">
+  <header class="card-header">
+    <p class="card-header-title">
+      <a class="tag is-{{ todo.category.color }}"
+        href="{{ url_for('main.category_todos', category_id=todo.category.id) }}">{{ todo.category.name }}</a>
+    </p>
+  </header>
+  <div class="card-content ">
+    <div class="content">
+      Todo:
+      {% if todo.completed %}
+      <strike>
+        {{ todo.title }}
+      </strike>
+      {% else %}
+      {{ todo.title }}
+      {% endif %}
+
+      <br>
+      <i>
+        Priority:
+        {% if todo.priority == 0 %}
+        None
+        {% endif %}
+        {% if todo.priority == 1 %}
+        Low
+        {% endif %}
+        {% if todo.priority == 2 %}
+        Medium
+        {% endif %}
+        {% if todo.priority == 3 %}
+        High
+        {% endif %}
+      </i>
+      <br>
+      <i>Status:
+        {% if todo.completed %}
+        Completed <a class="button is-danger is-small"
+          href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><strong>Mark Pending</strong></a>
+        {% else %}
+        Pending <a class="button is-success is-small"
+          href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><strong>Mark Compete</strong></a>
+        {% endif %}
+      </i>
+      <br>
+      <time><i>Created at: {{todo.created_at.date()}}</i></time>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <a href="{{ url_for('main.update_todo', todo_id=todo.id) }}" class="card-footer-item">Update</a>
+    <a href="{{ url_for('main.delete_todo', todo_id=todo.id) }}" class="card-footer-item">Delete</a>
+  </footer>
+</div>
+<br>
+{% endfor %}
+
+
+{% endblock content %}
