@@ -1,4 +1,3 @@
-from turtle import color
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 
@@ -24,17 +23,5 @@ class TodoForm(FlaskForm):
     #     self.category.choices = [(c.id, f'{c.name} - color: {c.color}') for c in Category.query.filter_by(user=current_user)]
 
 class CategoryForm(FlaskForm):
-    colors = [
-        ('black', 'Black'),
-        ('light', 'Light'),
-        ('dark', 'Dark'),
-        ('primary', 'Primary'),
-        ('info', 'Info'),
-        ('success', 'Success'),
-        ('warning', 'Warning'),
-        ('danger', 'Danger'),
-    ]
-
     name = StringField("Category Name")
-    color= SelectField("Category Color", choices=colors)
 

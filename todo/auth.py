@@ -17,6 +17,7 @@ def login_post():
 
     user = User.query.filter_by(username=username).first()
     print(user)
+
     if not user:
         if not check_password_hash(user.password, password):
             flash('Please check your login details and try again...')

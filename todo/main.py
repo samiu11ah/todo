@@ -3,19 +3,26 @@ from flask_login import login_required, current_user
 from .models import Todo, Category
 from .forms import TodoForm, CategoryForm
 from sqlalchemy import asc, desc
+from datetime import datetime
 from . import db
 
 main = Blueprint('main', __name__)
 
-@main.route('/todos', methods=['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
     if request.method == "POST":
         title = request.form.get('title')
         category_id = request.form.get('category')
         priority = request.form.get('priority')
+        date = request.form.get('date')
+        year  = int(date[:4])
+        month =  int(date[5:7])
+        date = int(date[8:10])
+        
+        date =datetime(year,month,date)
 
-        todo = Todo(title=title, category_id=category_id, priority=priority, user_id=current_user.id)
+        todo = Todo(title=title, category_id=category_id, priority=priority, user_id=current_user.id, date=date)
         db.session.add(todo)
         db.session.commit()
         flash(f"{todo} created...")
@@ -28,11 +35,11 @@ def index():
     form = TodoForm()
     todos = Todo.query.filter_by(user=current_user)
 
-    if sort_by == 'title':
-        todos = Todo.query.order_by(asc(Todo.title)).filter_by(user=current_user)
+    if sort_by == 'date':
+        todos = Todo.query.order_by(asc(Todo.date)).filter_by(user=current_user)
         if descending == 'yes':
-            todos = Todo.query.order_by(desc(Todo.title)).filter_by(user=current_user)
-            print('order by title, descending')
+            todos = Todo.query.order_by(desc(Todo.date)).filter_by(user=current_user)
+            print('order by date, descending')
             
 
     if sort_by == 'priority':
@@ -56,6 +63,13 @@ def update_todo(todo_id):
         existing_todo.title = request.form.get('title')
         existing_todo.category_id = request.form.get('category')
         existing_todo.priority = request.form.get('priority')
+        date = request.form.get('date')
+        year  = int(date[:4])
+        month =  int(date[5:7])
+        date = int(date[8:10])
+
+        existing_todo.date =datetime(year,month,date)
+
         db.session.commit()
         flash(f"{existing_todo} Updated...")
         return redirect(url_for('main.index'))
@@ -108,7 +122,6 @@ def toggle_status(todo_id):
     if todo.user_id == current_user.id:
         todo.completed = not todo.completed
         db.session.commit()
-        flash('Deleted todo...')
     else:
         flash('Something went wrong..')
     return redirect(url_for('main.index'))
@@ -123,11 +136,12 @@ def categories():
         name = request.form.get('name')
         color = request.form.get('color')
 
+
         category = Category(name=name, color=color, user=current_user)
 
         db.session.add(category)
         db.session.commit()
-        flash(f"{category} with color {category.color} created...")
+        flash(f"{category} created...")
 
     categories = Category.query.filter_by(user_id=current_user.id)
     return render_template('main/categories.html', form = form, categories=categories)
@@ -156,7 +170,7 @@ def delete_category(category_id):
             db.session.delete(todo)
         db.session.delete(category)
         db.session.commit()
-        flash('Deleted category and all todos of this category...')
+        flash('Deleted category and all its todos ...')
     else:
         flash('Something went wrong..')
     return redirect(url_for('main.categories'))

@@ -30,7 +30,7 @@ class Todo(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id", ondelete='CASCADE'))
     priority = db.Column(db.Integer, default=0)
     completed = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.Date)
 
     def __repr__(self):
         return '<Todo %r>' % self.title
