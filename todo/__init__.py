@@ -2,9 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import os
+from flask_marshmallow import Marshmallow
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
+ma = Marshmallow()
 
 db = SQLAlchemy()
 
@@ -18,15 +21,17 @@ def create_app(test_config=None):
     #     SQLALCHEMY_TRACK_MODIFICATIONS=False
     # )
 
-    app.config['SECRET_KEY'] = 'a3410e5f349e760123db6e01649311f9dc6866a3cb320081bc08bb0ed48f22cc2cc076f98da263b21bc87206b6408d5ed5a0'
+    app.config['SECRET_KEY'] = 'a3410e5f349e760123db6e01649311f9dc6866a3cb320081bc08bb0ed48f22c'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
+    ma.init_app(app)
 
     login_manager = LoginManager()
 
     login_manager.login_view = 'auth.login'
+    login_manager.login_message = 'Bitte melden Sie sich an, um auf diese Seite zuzugreifen.'
     login_manager.init_app(app)
 
     from .models import User
@@ -40,6 +45,9 @@ def create_app(test_config=None):
 
     from .main import main as main_bluprint
     app.register_blueprint(main_bluprint)
+    
+    from .api import api as api_bluprint
+    app.register_blueprint(api_bluprint)
 
     return app
 

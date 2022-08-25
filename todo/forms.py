@@ -1,18 +1,16 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 
-from flask_login import current_user
-from .models import Category
 
 
 
 
 class TodoForm(FlaskForm):
     priorities = [
-        ('0', 'None'),
-        ('1', 'Low'),
-        ('2', 'Medium'),
-        ('3', 'High'),
+        ('0', 'ohne'),
+        ('1', 'Niedrig'),
+        ('2', 'Mittel'),
+        ('3', 'hoch'),
     ]
     title = StringField("Todo")
     priority = SelectField('Priority', choices=priorities)

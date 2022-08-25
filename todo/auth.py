@@ -20,7 +20,7 @@ def login_post():
 
     if not user:
         if not check_password_hash(user.password, password):
-            flash('Please check your login details and try again...')
+            flash('Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut...')
             return redirect(url_for('auth.login'))
 
     login_user(user)
@@ -45,14 +45,14 @@ def signup_post():
 
     if user:
         # CAN'T REGISTER BECAUSE USER ALREADY IN DB
-        flash('User Already exists...')
+        flash('Benutzer existiert bereits...')
         return redirect(url_for('auth.signup'))
     else:
         # REGISTER NEW USER
         new_user = User(name=name, username=username, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        flash(f'User {new_user.username} registered successfully...')
+        flash(f'Benutzer {new_user.username} Erfolgreich registriert...')
         return redirect(url_for('auth.login'))
 
 

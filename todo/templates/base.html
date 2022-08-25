@@ -25,11 +25,11 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Heim</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('main.categories') }}">Categories</a>
+                        <a class="nav-link" aria-current="page" href="{{ url_for('main.categories') }}">Kategorien</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -38,16 +38,16 @@
                     {% if not current_user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" class="nav-link" aria-current="page"
-                            href="{{ url_for('auth.login') }}">Login</a>
+                            href="{{ url_for('auth.login') }}">Anmeldung</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                        <a class="nav-link" aria-current="page" href="{{ url_for('auth.signup') }}">Anmeldung</a>
                     </li>
                     {% endif %}
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('auth.logout') }}">Logout</a>
+                        <a class="nav-link" aria-current="page" href="{{ url_for('auth.logout') }}">Ausloggen</a>
                     </li>
                     {% endif %}
                     <!--  -->

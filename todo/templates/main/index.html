@@ -12,14 +12,14 @@
 {% endwith %}
 
 <h1 class="mt-3">
-  Welcome, {{ current_user.username }}!
+  Herzlich willkommen, {{ current_user.username }}!
 </h1>
 
 <h3>
-  Your Todos
+  Ihre Todo-Einträge
 </h3>
 
-<p>Sort By Date:
+<p>Nach Datum sortieren:
   <a class="button is-small" href="{{ url_for('main.index', sort_by='date') }}">
     <i class="bi bi-arrow-up-circle text-dark"></i>
   </a>
@@ -28,7 +28,7 @@
     <i class="bi bi-arrow-down-circle text-dark"></i>
   </a>
 </p>
-<p>Sort By Priority:
+<p>Nach Priorität sortieren:
   <a class="button is-small" href="{{ url_for('main.index', sort_by='priority') }}">
     <i class="bi bi-arrow-up-circle text-dark"></i>
   </a>
@@ -41,17 +41,17 @@
 <p>
   <strong>
 
-    Sorted by:
+    Sortiert nach:
     {% if sort_by == 'date' %}
-    Date -
+    Datum -
     {% else %}
-    Priority -
+    Priorität -
     {% endif %}
 
     {% if descending == 'yes' %}
-    Descending Order
+    Absteigende Reihenfolge
     {% else %}
-    Accending Order
+    Aufsteigende Reihenfolge
     {% endif %}
   </strong>
 
@@ -69,7 +69,7 @@
   {% for todo in todos %}
 
   <!--  -->
-  <div class="col-4 mb-3">
+  <div class="col-sm-12 col-md-4 mb-md-3">
 
     <div class="card">
       <div class="card-body">
@@ -89,45 +89,49 @@
 
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          Category:
-          <a class="btn btn-sm btn-outline"
-            href="{{ url_for('main.category_todos', category_id=todo.category.id) }}">{{ todo.category.name }}</a>
+          Kategorie:
+          {% if todo.category.id %}
+          <a class="btn btn-sm btn-outline" href="{{ url_for('main.category_todos', category_id=todo.category.id) }}">{{
+            todo.category.name }}</a>
+          {% endif %}
         </li>
         <li class="list-group-item">
-          Priority:
+          Priorität:
           {% if todo.priority == 0 %}
-          None
+          Ohne
           {% endif %}
           {% if todo.priority == 1 %}
-          Low
+          Niedrig
           {% endif %}
           {% if todo.priority == 2 %}
-          Medium
+          Mittel
           {% endif %}
           {% if todo.priority == 3 %}
-          High
+          Hoch
           {% endif %}
         </li>
         <li class="list-group-item">
           Status:
           {% if todo.completed %}
-          Completed <a class="btn btn-outline btn-sm text-success"
+          Abgeschlossen <a class="btn btn-outline btn-sm text-success"
             href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><i class="bi bi-check-circle-fill"></i></a>
           {% else %}
-          Pending <a class="btn btn-outline btn-sm text-dark"
+          Ausstehend <a class="btn btn-outline btn-sm text-dark"
             href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><i class="bi bi-check-circle"></i></a>
           {% endif %}
         </li>
 
         <li class="list-group-item">
-          Due Date at: {{todo.date}}
+          Geburtstermin: {{todo.date}}
         </li>
 
 
       </ul>
       <div class="card-body">
-        <a href="{{ url_for('main.update_todo', todo_id=todo.id) }}" class="btn btn-outline btn-sm text-info">Update</a>
-        <a href="{{ url_for('main.delete_todo', todo_id=todo.id) }}" class="btn btn-outline btn-sm text-danger">Delete</a>
+        <a href="{{ url_for('main.update_todo', todo_id=todo.id) }}"
+          class="btn btn-outline btn-sm text-info">Aktualisieren</a>
+        <a href="{{ url_for('main.delete_todo', todo_id=todo.id) }}"
+          class="btn btn-outline btn-sm text-danger">Löschen</a>
       </div>
     </div>
 
@@ -146,9 +150,9 @@
   <form action="" method="post" class="px-4 py-2 bg-light border border-2 rounded-0">
     <h4>
       {% if existing_todo %}
-      Update Todo
+      Aufgaben aktualisieren
       {% else %}
-      Add Todo
+      Aufgaben hinzufügen
       {% endif %}
     </h4>
     {{ form.csrf_token }}
@@ -159,17 +163,16 @@
 
     <div class="row ">
 
-      <div class="col-4">
+      <div class="col-sm-12 col-md-4">
         {{ form.title.label(class="label") }}
-        <div class="mb-3">
-          <input class="form-control" id="title" name="title" placeholder="e.g Buy Milk" required="" type="text"
-            value="{{existing_todo.title}}">
+        <div class="mb-md-3">
+          <input class="form-control" id="title" name="title" required="" type="text" value="{{existing_todo.title}}">
         </div>
       </div>
 
-      <div class="col-2">
-        <span class="label">Category</span>
-        <div class="mb-3">
+      <div class="col-sm-3 col-md-2">
+        <span class="label">Kategorie</span>
+        <div class="mb-md-3">
           <select class="form-control" id="category" name="category" required="" value="{{existing_todo.category}}">
             {% for choice in choices %}
             <option value="{{ choice.id }}" class="has-background-{{ choice.color }}" style="color: white;">
@@ -179,25 +182,26 @@
           </select>
         </div>
       </div>
-      <div class="col-2">
+      <div class="col-sm-3 col-md-2">
         {{ form.priority.label(class="") }}
-        <div class="mb-3">
+        <div class="mb-md-3">
           {{ form.priority(required="", class="form-control", value="{{existing_todo.priority}}") }}
         </div>
       </div>
-      <div class="col-2">
-        <label>Set Date</label>
-        <div class="mb-3">
+      <div class="col-sm-3 col-md-2">
+        <label>Datum einstellen</label>
+        <div class="mb-md-3">
           <input required class="form-control" type="date" name="date">
         </div>
       </div>
-      <div class="col-2">
+      <div class="col-sm-3 col-md-2">
         <label for=""></label>
-        <div class="">
+        <div class="" style="height: 100%;">
           {% if existing_todo %}
-          <input class="btn btn-success btn-square rounded-0 text-white" type="submit" value="Update">
+          <button class="btn btn-success rounded-0 p-0" type="submit"
+            style="font-size: x-small; height: 40px !important; width: 40px !important;">Aktualisieren</button>
           {% else %}
-          <input class="btn btn-primary btn-square rounded-0 " type="submit" value="Add">
+          <button class="btn btn-primary rounded-0" type="submit"><i class="bi bi-plus-lg"></i></button>
           {% endif %}
         </div>
       </div>

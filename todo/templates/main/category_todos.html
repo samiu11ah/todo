@@ -2,7 +2,7 @@
 
 {% block content %}
 <h4 class="mt-4">
-  Todos for category "{{category.name}}"
+  Todos für Kategorie "{{category.name}}"
 </h4>
 <br>
 <div class="row">
@@ -30,45 +30,45 @@
 
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          Category:
+          Kategorie:
           <a class="btn btn-sm btn-outline text-{{todo.category.color}}"
             href="{{ url_for('main.category_todos', category_id=todo.category.id) }}">{{ todo.category.name }}</a>
         </li>
         <li class="list-group-item">
-          Priority:
+          Priorität:
           {% if todo.priority == 0 %}
-          None
+          Ohne
           {% endif %}
           {% if todo.priority == 1 %}
-          Low
+          Niedrig
           {% endif %}
           {% if todo.priority == 2 %}
-          Medium
+          Mittel
           {% endif %}
           {% if todo.priority == 3 %}
-          High
+          Hoch
           {% endif %}
         </li>
         <li class="list-group-item">
           Status:
           {% if todo.completed %}
-          Completed <a class="btn btn-outline btn-sm text-success"
+          Abgeschlossen <a class="btn btn-outline btn-sm text-success"
             href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><i class="bi bi-check-circle-fill"></i></a>
           {% else %}
-          Pending <a class="btn btn-outline btn-sm text-dark"
+          Ausstehend <a class="btn btn-outline btn-sm text-dark"
             href="{{url_for('main.toggle_status', todo_id=todo.id)}}"><i class="bi bi-check-circle"></i></a>
           {% endif %}
         </li>
 
         <li class="list-group-item">
-          Due Date at: {{todo.date}}
+          Geburtstermin: {{todo.date}}
         </li>
 
 
       </ul>
       <div class="card-body">
-        <a href="{{ url_for('main.update_todo', todo_id=todo.id) }}" class="btn btn-outline btn-sm text-info">Update</a>
-        <a href="{{ url_for('main.delete_todo', todo_id=todo.id) }}" class="btn btn-outline btn-sm text-danger">Delete</a>
+        <a href="{{ url_for('main.update_todo', todo_id=todo.id) }}" class="btn btn-outline btn-sm text-info">Aktualisieren</a>
+        <a href="{{ url_for('main.delete_todo', todo_id=todo.id) }}" class="btn btn-outline btn-sm text-danger">Löschen</a>
       </div>
     </div>
 

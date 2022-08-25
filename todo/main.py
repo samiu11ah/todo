@@ -25,7 +25,7 @@ def index():
         todo = Todo(title=title, category_id=category_id, priority=priority, user_id=current_user.id, date=date)
         db.session.add(todo)
         db.session.commit()
-        flash(f"{todo} created...")
+        flash(f"{todo} erstellt...")
         return redirect(url_for('main.index'))
     
     sort_by = request.args.get('sort_by')
@@ -71,7 +71,7 @@ def update_todo(todo_id):
         existing_todo.date =datetime(year,month,date)
 
         db.session.commit()
-        flash(f"{existing_todo} Updated...")
+        flash(f"{existing_todo} Aktualisiert...")
         return redirect(url_for('main.index'))
     
     sort_by = request.args.get('sort_by')
@@ -109,9 +109,9 @@ def delete_todo(todo_id):
     if todo.user_id == current_user.id:
         db.session.delete(todo)
         db.session.commit()
-        flash('Deleted todo...')
+        flash('Aufgabe gelöscht...')
     else:
-        flash('Something went wrong..')
+        flash('Etwas ist schief gelaufen..')
     return redirect(url_for('main.index'))
 
 @main.route('/toggle_status/<int:todo_id>')
@@ -123,7 +123,7 @@ def toggle_status(todo_id):
         todo.completed = not todo.completed
         db.session.commit()
     else:
-        flash('Something went wrong..')
+        flash('Etwas ist schief gelaufen..')
     return redirect(url_for('main.index'))
 
 # Categories CRUD ---
@@ -170,8 +170,8 @@ def delete_category(category_id):
             db.session.delete(todo)
         db.session.delete(category)
         db.session.commit()
-        flash('Deleted category and all its todos ...')
+        flash('Gelöschte Kategorie und all ihre Todos ...')
     else:
-        flash('Something went wrong..')
+        flash('Etwas ist schief gelaufen..')
     return redirect(url_for('main.categories'))
 

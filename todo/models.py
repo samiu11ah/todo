@@ -1,8 +1,7 @@
 from email.policy import default
 from flask_login import UserMixin
-from . import db
-from datetime import datetime
-import enum
+from . import db, ma
+from marshmallow_sqlalchemy.fields import Nested
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,9 +14,7 @@ class User(UserMixin, db.Model):
     categories = db.relationship("Category", backref="user", passive_deletes=True)
 
     def __repr__(self):
-        return '<User %r>' % self.username
-
-
+        return '<Benutzer %r>' % self.username
 
 
 
@@ -33,7 +30,7 @@ class Todo(db.Model):
     date = db.Column(db.Date)
 
     def __repr__(self):
-        return '<Todo %r>' % self.title
+        return '<Machen %r>' % self.title
 
 
 class Category(db.Model):
@@ -45,5 +42,17 @@ class Category(db.Model):
     todos = db.relationship("Todo", backref="category", passive_deletes=True)
 
     def __repr__(self):
-        return '[Category %r]' % self.name
+        return '[Kategorie %r]' % self.name
+
+
+class CategorySchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Category
+        # include_fk = True
+
+class TodoSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Todo
+        include_fk = True
+    
 
